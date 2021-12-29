@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/signal"
 	"vue3-server/api"
+	"vue3-server/entity"
 )
 
 // Init 初始化配置
@@ -43,9 +44,9 @@ func ErrorHandler() func(c *fiber.Ctx, err error) error {
 		}
 
 		// 全局使用JSON方式返回错误
-		return c.Status(errorCode).JSON(map[string]interface{}{
-			"code": 500,
-			"data": err.Error(),
+		return c.Status(errorCode).JSON(entity.ResponseEntity{
+			Code: 500,
+			Data: err.Error(),
 		})
 	}
 }
