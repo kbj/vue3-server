@@ -10,6 +10,7 @@ func main() {
 		ServerHeader: "Fiber",
 		Prefork:      false,
 		AppName:      "vue3-cms-server",
+		ErrorHandler: common.ErrorHandler(),
 	})
 
 	// 初始化

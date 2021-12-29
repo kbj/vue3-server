@@ -34,6 +34,22 @@ func Start(app *fiber.App, listen string) {
 	fmt.Println("Running cleanup tasks...")
 }
 
+// ErrorHandler 通用的错误处理逻辑
+func ErrorHandler() func(c *fiber.Ctx, err error) error {
+	return func(c *fiber.Ctx, err error) error {
+		errorCode := fiber.StatusInternalServerError
+		if e, ok := err.(*fiber.Error); ok {
+			errorCode = e.Code
+		}
+
+		// 全局使用JSON方式返回错误
+		return c.Status(errorCode).JSON(map[string]interface{}{
+			"code": 500,
+			"data": err.Error(),
+		})
+	}
+}
+
 // 初始化日志
 func initLog(app *fiber.App) {
 
