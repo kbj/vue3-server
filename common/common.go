@@ -1,46 +1,40 @@
 package common
 
 import (
-	"context"
-	"github.com/gin-gonic/gin"
+	"fmt"
+	"github.com/gofiber/fiber/v2"
 	"log"
-	"net/http"
 	"os"
 	"os/signal"
-	"time"
 	"vue3-server/api"
 )
 
 // Init 初始化配置
-func Init(app *gin.Engine) {
-	// 初始化路由
+func Init(app *fiber.App) {
+	// 初始化日志
+	initLog(app)
+	// 注册路由
 	api.RegisterRoute(app)
 }
 
-// GracefulShutDown 优雅关机
-func GracefulShutDown(app *gin.Engine, listen string) {
-	srv := &http.Server{
-		Addr:    listen,
-		Handler: app,
-	}
-
+// Start 启动服务
+func Start(app *fiber.App, listen string) {
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt)
 	go func() {
-		// 服务连接
-		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatalf("listen: %s\n", err)
-		}
+		_ = <-c
+		log.Println("Gracefully shutting down...")
+		_ = app.Shutdown()
 	}()
 
-	// 等待中断信号以优雅地关闭服务器（设置 5 秒的超时时间）
-	quit := make(chan os.Signal)
-	signal.Notify(quit, os.Interrupt)
-	<-quit
-	log.Println("Shutdown Server ...")
-
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-	if err := srv.Shutdown(ctx); err != nil {
-		log.Fatal("Server Shutdown:", err)
+	if err := app.Listen(listen); err != nil {
+		log.Panic(err)
 	}
-	log.Println("Server exiting")
+
+	fmt.Println("Running cleanup tasks...")
+}
+
+// 初始化日志
+func initLog(app *fiber.App) {
+
 }

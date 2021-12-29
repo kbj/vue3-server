@@ -1,16 +1,20 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
+	"github.com/gofiber/fiber/v2"
 	"vue3-server/common"
 )
 
 func main() {
-	engine := gin.Default()
+	app := fiber.New(fiber.Config{
+		ServerHeader: "Fiber",
+		Prefork:      false,
+		AppName:      "vue3-cms-server",
+	})
 
 	// 初始化
-	common.Init(engine)
+	common.Init(app)
 
-	// 优雅关机
-	common.GracefulShutDown(engine, ":8080")
+	// 启动服务
+	common.Start(app, ":8080")
 }
