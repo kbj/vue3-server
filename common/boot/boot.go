@@ -15,10 +15,12 @@ import (
 func Init(app *fiber.App) {
 	// 初始化Zap日志框架
 	global.Logger = core.InitializeZap()
+
 	// fiber框架的日志改为zap
 	app.Use(fiberzap.New(fiberzap.Config{
 		Logger: global.Logger,
 	}))
+
 	// 注册路由
 	api.RegisterRoute(app)
 }
