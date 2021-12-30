@@ -1,19 +1,24 @@
-package common
+package boot
 
 import (
-	"fmt"
+	"github.com/gofiber/contrib/fiberzap"
 	"github.com/gofiber/fiber/v2"
-	"log"
 	"os"
 	"os/signal"
 	"vue3-server/api"
+	"vue3-server/common/core"
+	"vue3-server/common/global"
 	"vue3-server/entity"
 )
 
 // Init 初始化配置
 func Init(app *fiber.App) {
-	// 初始化日志
-	initLog(app)
+	// 初始化Zap日志框架
+	global.Logger = core.InitializeZap()
+	// fiber框架的日志改为zap
+	app.Use(fiberzap.New(fiberzap.Config{
+		Logger: global.Logger,
+	}))
 	// 注册路由
 	api.RegisterRoute(app)
 }
@@ -24,15 +29,15 @@ func Start(app *fiber.App, listen string) {
 	signal.Notify(c, os.Interrupt)
 	go func() {
 		_ = <-c
-		log.Println("Gracefully shutting down...")
+		global.Logger.Info("Gracefully shutting down...")
 		_ = app.Shutdown()
 	}()
 
 	if err := app.Listen(listen); err != nil {
-		log.Panic(err)
+		global.Logger.Error(err.Error())
 	}
 
-	fmt.Println("Running cleanup tasks...")
+	global.Logger.Info("Running cleanup tasks...")
 }
 
 // ErrorHandler 通用的错误处理逻辑
@@ -49,9 +54,4 @@ func ErrorHandler() func(c *fiber.Ctx, err error) error {
 			Data: err.Error(),
 		})
 	}
-}
-
-// 初始化日志
-func initLog(app *fiber.App) {
-
 }

@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"vue3-server/common"
+	"vue3-server/common/boot"
 )
 
 func main() {
@@ -10,12 +10,12 @@ func main() {
 		ServerHeader: "Fiber",
 		Prefork:      false,
 		AppName:      "vue3-cms-server",
-		ErrorHandler: common.ErrorHandler(),
+		ErrorHandler: boot.ErrorHandler(),
 	})
 
 	// 初始化
-	common.Init(app)
+	boot.Init(app)
 
 	// 启动服务
-	common.Start(app, ":8080")
+	boot.Start(app, ":8080")
 }
