@@ -13,6 +13,9 @@ import (
 
 // Init 初始化配置
 func Init(app *fiber.App) {
+	// 初始化配置文件
+	global.VP = core.Viper()
+
 	// 初始化Zap日志框架
 	global.Logger = core.InitializeZap()
 

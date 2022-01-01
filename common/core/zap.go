@@ -6,17 +6,15 @@ import (
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
 	"os"
+	"vue3-server/common/global"
 	"vue3-server/utils"
 )
 
 // InitializeZap 初始化zap实例
 func InitializeZap() (logger *zap.Logger) {
-	// todo 目前暂时写入d:/logs下，以及打印info级别日志  后续引入配置文件
-	const dir = "d:/logs"
-
-	if ok, _ := utils.PathExists(dir); !ok { // 判断是否有Director文件夹
-		fmt.Printf("create %v directory\n", dir)
-		_ = os.Mkdir(dir, os.ModePerm)
+	if ok, _ := utils.PathExists(global.Config.Zap.Dir); !ok { // 判断是否有Director文件夹
+		fmt.Printf("create %v directory\n", global.Config.Zap.Dir)
+		_ = os.Mkdir(global.Config.Zap.Dir, os.ModePerm)
 	}
 
 	// 创建各个级别，并把error以上更高级的合并到error中
@@ -39,10 +37,10 @@ func InitializeZap() (logger *zap.Logger) {
 
 	// 依据不同级别生成不同的core
 	cores := [...]zapcore.Core{
-		getEncoderCore(fmt.Sprintf("%s/server_debug.log", dir), debugPriority),
-		getEncoderCore(fmt.Sprintf("%s/server_info.log", dir), infoPriority),
-		getEncoderCore(fmt.Sprintf("%s/server_warn.log", dir), warnPriority),
-		getEncoderCore(fmt.Sprintf("%s/server_error.log", dir), errorPriority),
+		getEncoderCore(fmt.Sprintf("%s/server_debug.log", global.Config.Zap.Dir), debugPriority),
+		getEncoderCore(fmt.Sprintf("%s/server_info.log", global.Config.Zap.Dir), infoPriority),
+		getEncoderCore(fmt.Sprintf("%s/server_warn.log", global.Config.Zap.Dir), warnPriority),
+		getEncoderCore(fmt.Sprintf("%s/server_error.log", global.Config.Zap.Dir), errorPriority),
 	}
 
 	// 生成zap对象
@@ -61,8 +59,15 @@ func getEncoderCore(logPath string, level zapcore.LevelEnabler) zapcore.Core {
 		Compress:   false,   // 是否压缩/归档旧文件
 	}
 
-	// 同时打印到控制台和文件，组成Writer
-	writer := zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), zapcore.AddSync(lumberJackLogger))
+	// 读取配置文件，是否要打印信息到控制台
+	var writer zapcore.WriteSyncer
+	if global.Config.Zap.LogInConsole {
+		// 同时打印到控制台和文件，组成Writer
+		writer = zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), zapcore.AddSync(lumberJackLogger))
+	} else {
+		writer = zapcore.AddSync(lumberJackLogger)
+	}
+
 	return zapcore.NewCore(getEncoderConfig(), writer, level)
 }
 

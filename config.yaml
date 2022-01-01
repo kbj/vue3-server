@@ -1,0 +1,6 @@
+zap:
+  dir: d:/logs
+  log-in-console: true
+
+system:
+  port: 8081
