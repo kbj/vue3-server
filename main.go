@@ -10,7 +10,6 @@ func main() {
 	app := fiber.New(fiber.Config{
 		ServerHeader: "Fiber",
 		Prefork:      false,
-		AppName:      "vue3-cms-server",
 		ErrorHandler: boot.ErrorHandler(),
 	})
 
