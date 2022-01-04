@@ -18,8 +18,8 @@ func Viper(path ...string) *viper.Viper {
 		flag.StringVar(&config, "c", "", "choose config file.")
 		flag.Parse()
 		if config == "" { // 优先级: 命令行 > 环境变量 > 默认值
-			if configEnv := os.Getenv(global.ConfigEnv); configEnv == "" {
-				config = global.ConfigFile
+			if configEnv := os.Getenv(global.ConfigEnvName); configEnv == "" {
+				config = global.ConfigFileName
 				fmt.Printf("您正在使用config的默认值,config的路径为%v\n", config)
 			} else {
 				config = configEnv

@@ -19,6 +19,9 @@ func Init(app *fiber.App) {
 	// 初始化Zap日志框架
 	global.Logger = core.InitializeZap()
 
+	// 初始化session池
+	global.Session = core.CreateSession()
+
 	// fiber框架的日志改为zap
 	app.Use(fiberzap.New(fiberzap.Config{
 		Logger: global.Logger,
