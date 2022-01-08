@@ -11,10 +11,7 @@ import (
 // AuthLogin 自定义中间件，校验登录状态
 func AuthLogin() fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		global.Logger.Info("添加中间件：AuthLogin")
-
 		token := c.Get(fiber.HeaderAuthorization)
-		global.Logger.Info("token是：" + token)
 
 		// token是否存在的校验
 		if token == "" || strings.Contains(token, "Bearer") {

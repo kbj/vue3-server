@@ -26,6 +26,7 @@ func registerAnonymousRoutes(app *fiber.App) {
 func registerAuthRoutes(app *fiber.App) {
 	v1Group := app.Group("")
 	v1Group.Use(middleware.AuthLogin())
+	global.Logger.Info("添加中间件：AuthLogin")
 
 	// 用户相关
 	userGroup := v1Group.Group("user")

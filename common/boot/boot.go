@@ -20,7 +20,9 @@ func Init(app *fiber.App) {
 	global.Logger = core.InitializeZap()
 
 	// 初始化数据库
-	global.Db = core.InitializeEntInstance()
+	if global.Db = core.InitializeEntInstance(); global.Db != nil {
+		defer global.Db.Close()
+	}
 
 	// 初始化session池
 	global.Session = core.InitializeSession()
