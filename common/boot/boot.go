@@ -8,7 +8,6 @@ import (
 	"vue3-server/api"
 	"vue3-server/common/core"
 	"vue3-server/common/global"
-	"vue3-server/ent"
 	"vue3-server/model/system"
 )
 
@@ -74,6 +73,6 @@ func cleanupTasks() {
 	// 数据库关闭
 	if global.Db != nil {
 		global.Logger.Info("Shutdown db connect")
-		func(Db *ent.Client) { _ = Db.Close() }(global.Db)
+		_ = global.Db.Close()
 	}
 }
