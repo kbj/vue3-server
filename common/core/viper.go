@@ -73,4 +73,6 @@ func addDefault(v *viper.Viper) {
 	v.SetDefault("jwt.expires-second", 7776000)          // 默认的token过期时间  90天
 	v.SetDefault("jwt.buffer-second", 604800)            // 默认的token过期的缓冲时间  7天
 	v.SetDefault("jwt.issuer", "kbj")                    // 默认token签发者
+	v.SetDefault("system.db.max-idle-conn", 10)          // 默认数据库空闲连接数
+	v.SetDefault("system.db.max-open-conn", 100)         // 默认数据库最大连接数
 }

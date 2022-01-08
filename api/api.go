@@ -24,7 +24,7 @@ func registerAnonymousRoutes(app *fiber.App) {
 
 // 注册需要登录验证的路由
 func registerAuthRoutes(app *fiber.App) {
-	v1Group := app.Group("/v1")
+	v1Group := app.Group("")
 	v1Group.Use(middleware.AuthLogin())
 
 	// 用户相关
