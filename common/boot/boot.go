@@ -8,6 +8,7 @@ import (
 	"vue3-server/api"
 	"vue3-server/common/core"
 	"vue3-server/common/global"
+	"vue3-server/ent"
 	"vue3-server/model/system"
 )
 
@@ -20,9 +21,7 @@ func Init(app *fiber.App) {
 	global.Logger = core.InitializeZap()
 
 	// 初始化数据库
-	if global.Db = core.InitializeEntInstance(); global.Db != nil {
-		defer global.Db.Close()
-	}
+	global.Db = core.InitializeEntInstance()
 
 	// 初始化session池
 	global.Session = core.InitializeSession()
@@ -51,6 +50,12 @@ func Start(app *fiber.App, listen string) {
 	}
 
 	global.Logger.Info("Running cleanup tasks...")
+
+	// 数据库关闭
+	if global.Db != nil {
+		global.Logger.Info("Shutdown db connect")
+		defer func(Db *ent.Client) { _ = Db.Close() }(global.Db)
+	}
 }
 
 // ErrorHandler 通用的错误处理逻辑
