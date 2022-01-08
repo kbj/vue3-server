@@ -50,12 +50,7 @@ func Start(app *fiber.App, listen string) {
 	}
 
 	global.Logger.Info("Running cleanup tasks...")
-
-	// 数据库关闭
-	if global.Db != nil {
-		global.Logger.Info("Shutdown db connect")
-		defer func(Db *ent.Client) { _ = Db.Close() }(global.Db)
-	}
+	defer cleanupTasks()
 }
 
 // ErrorHandler 通用的错误处理逻辑
@@ -71,5 +66,14 @@ func ErrorHandler() func(c *fiber.Ctx, err error) error {
 			Code: 500,
 			Data: err.Error(),
 		})
+	}
+}
+
+// 优雅关机后业务方面需要执行的任务
+func cleanupTasks() {
+	// 数据库关闭
+	if global.Db != nil {
+		global.Logger.Info("Shutdown db connect")
+		func(Db *ent.Client) { _ = Db.Close() }(global.Db)
 	}
 }
