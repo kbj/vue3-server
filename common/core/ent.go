@@ -4,6 +4,7 @@ import (
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
 	"time"
 	"vue3-server/common/global"
 	"vue3-server/ent"
