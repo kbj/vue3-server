@@ -5,7 +5,7 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 	"time"
 	"vue3-server/common/global"
-	"vue3-server/model/system"
+	"vue3-server/model/base"
 )
 
 var (
@@ -16,14 +16,14 @@ var (
 )
 
 // CreateJwtToken 创建token
-func CreateJwtToken(claims system.CustomClaims) (string, error) {
+func CreateJwtToken(claims base.CustomClaims) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS512, claims)
 	return token.SignedString([]byte(global.Config.Jwt.SigningKey))
 }
 
 // CreateClaims 根据传来的值生成Claims
-func CreateClaims(claims system.BaseClaims) system.CustomClaims {
-	newClaims := system.CustomClaims{
+func CreateClaims(claims base.BaseClaims) base.CustomClaims {
+	newClaims := base.CustomClaims{
 		BaseClaims: claims,
 		BufferTime: global.Config.Jwt.BufferSecond,
 		RegisteredClaims: jwt.RegisteredClaims{
@@ -36,8 +36,8 @@ func CreateClaims(claims system.BaseClaims) system.CustomClaims {
 }
 
 // ParseJwtToken 解析Token
-func ParseJwtToken(tokenString string) (*system.CustomClaims, error) {
-	token, err := jwt.ParseWithClaims(tokenString, &system.CustomClaims{}, func(token *jwt.Token) (i interface{}, e error) {
+func ParseJwtToken(tokenString string) (*base.CustomClaims, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &base.CustomClaims{}, func(token *jwt.Token) (i interface{}, e error) {
 		return global.Config.Jwt.SigningKey, nil
 	})
 	if err != nil {
@@ -55,7 +55,7 @@ func ParseJwtToken(tokenString string) (*system.CustomClaims, error) {
 		}
 	}
 	if token != nil {
-		if claims, ok := token.Claims.(*system.CustomClaims); ok && token.Valid {
+		if claims, ok := token.Claims.(*base.CustomClaims); ok && token.Valid {
 			return claims, nil
 		}
 		return nil, TokenInvalid
@@ -65,7 +65,7 @@ func ParseJwtToken(tokenString string) (*system.CustomClaims, error) {
 }
 
 // RefreshJwtToken 刷新新的token
-func RefreshJwtToken(oldToken string, claims system.CustomClaims) (string, error) {
+func RefreshJwtToken(oldToken string, claims base.CustomClaims) (string, error) {
 	// 使用并发控制
 	v, err, _ := global.ConcurrencyControl.Do("JWT:"+oldToken, func() (interface{}, error) {
 		return CreateJwtToken(claims)

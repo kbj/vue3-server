@@ -1,6 +1,7 @@
 package core
 
 import (
+	"context"
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"fmt"
@@ -23,7 +24,13 @@ func InitializeEntInstance() *ent.Client {
 	db.SetMaxIdleConns(10)
 	db.SetMaxOpenConns(100)
 	db.SetConnMaxLifetime(time.Hour)
-	return ent.NewClient(ent.Driver(driver))
+
+	client := ent.NewClient(ent.Driver(driver))
+	if err := client.Schema.Create(context.Background()); err != nil {
+		global.Logger.Panic(fmt.Sprintf("failed creating schema resources: %v", err))
+	}
+	global.Logger.Info("初始化数据库表结构")
+	return client
 }
 
 // 得到数据库的连接驱动

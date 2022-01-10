@@ -2,6 +2,7 @@ package v1
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"vue3-server/model/system/request"
 	"vue3-server/utils"
 )
 
@@ -20,12 +21,13 @@ func checkHealth(context *fiber.Ctx) error {
 // 用户登录
 func userLogin(context *fiber.Ctx) error {
 	// 获取登录信息
-	username := context.FormValue("username")
-	password := context.FormValue("password")
+	var user request.SysUserModel
+	_ = context.BodyParser(&user)
 
-	var param = make(map[string]string)
-	param["username"] = username
-	param["password"] = password
+	// 校验表单
+	if success := utils.ValidateStruct(user); success != nil {
+		return context.JSON(&success)
+	}
 
-	return context.JSON(param)
+	return context.JSON(userService.UserLogin(context, &user))
 }
