@@ -2,6 +2,7 @@ package api
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	v1 "vue3-server/api/internal/v1"
 	"vue3-server/common/global"
 	"vue3-server/common/middleware"
@@ -17,7 +18,8 @@ func RegisterRoute(app *fiber.App) {
 
 // 注册匿名无需登录校验的路由
 func registerAnonymousRoutes(app *fiber.App) {
-	annoyGroup := app.Group("")
+	// 允许跨域注册路由
+	annoyGroup := app.Group("").Use(cors.New())
 	v1.InitBaseRoute(&annoyGroup)
 	global.Logger.Info("初始化匿名路由！")
 }

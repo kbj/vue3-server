@@ -15,7 +15,7 @@ type UserService struct{}
 // UserLogin 用户登录
 func (userService *UserService) UserLogin(ctx *fiber.Ctx, userInfo *request.SysUserModel) *base.ResponseEntity {
 	u, err := global.Db.User.Query().
-		Where(user.Username(userInfo.Username), user.Password(userInfo.Password)).Only(ctx.UserContext())
+		Where(user.Username(userInfo.Name), user.Password(userInfo.Password)).Only(ctx.UserContext())
 	if err != nil && ent.IsNotFound(err) {
 		return utils.ResponseFail("请检查用户名密码是否正确！")
 	}
