@@ -3,7 +3,6 @@ module vue3-server
 go 1.17
 
 require (
-	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gofiber/contrib/fiberzap v0.0.0-20211207071552-97ea1c071d84
 	github.com/gofiber/fiber/v2 v2.23.0
 	github.com/golang-jwt/jwt/v4 v4.2.0
@@ -13,22 +12,26 @@ require (
 )
 
 require (
-	entgo.io/ent v0.9.1
 	github.com/BurntSushi/toml v0.4.1 // indirect
 	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/fsnotify/fsnotify v1.5.1
+	github.com/go-playground/locales v0.14.0
+	github.com/go-playground/universal-translator v0.18.0
 	github.com/go-playground/validator/v10 v10.10.0
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.7.0 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e // indirect
+	gorm.io/driver/mysql v1.2.3
+	gorm.io/gorm v1.22.5
+	moul.io/zapgorm2 v1.1.1
 )
 
 require (
-	github.com/go-playground/locales v0.14.0 // indirect
-	github.com/go-playground/universal-translator v0.18.0 // indirect
-	github.com/google/uuid v1.3.0 // indirect
+	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
+	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/jinzhu/now v1.1.4 // indirect
 	github.com/klauspost/compress v1.13.6 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/magiconair/properties v1.8.5 // indirect

@@ -5,8 +5,8 @@ import (
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 	"golang.org/x/sync/singleflight"
+	"gorm.io/gorm"
 	"vue3-server/common/config"
-	"vue3-server/ent"
 )
 
 var (
@@ -15,7 +15,7 @@ var (
 	Config             config.Server           // 配置文件
 	Session            *session.Store          // 全局session池
 	ConcurrencyControl = &singleflight.Group{} // 并发控制
-	Db                 *ent.Client             // 数据库Orm对象
+	Db                 *gorm.DB                // 数据库Orm对象
 )
 
 var (

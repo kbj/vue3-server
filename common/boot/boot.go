@@ -3,6 +3,7 @@ package boot
 import (
 	"github.com/gofiber/contrib/fiberzap"
 	"github.com/gofiber/fiber/v2"
+	"go.uber.org/zap"
 	"os"
 	"os/signal"
 	"vue3-server/api"
@@ -20,7 +21,7 @@ func Init(app *fiber.App) {
 	global.Logger = core.InitializeZap()
 
 	// 初始化数据库
-	global.Db = core.InitializeEntInstance()
+	global.Db = core.InitializeDbInstance()
 
 	// 初始化session池
 	global.Session = core.InitializeSession()
@@ -45,7 +46,8 @@ func Start(app *fiber.App, listen string) {
 	}()
 
 	if err := app.Listen(listen); err != nil {
-		global.Logger.Error(err.Error())
+		global.Logger.Error("启动Web服务失败", zap.Error(err))
+		os.Exit(0)
 	}
 
 	global.Logger.Info("Running cleanup tasks...")
@@ -71,8 +73,8 @@ func ErrorHandler() func(c *fiber.Ctx, err error) error {
 // 优雅关机后业务方面需要执行的任务
 func cleanupTasks() {
 	// 数据库关闭
-	if global.Db != nil {
-		global.Logger.Info("Shutdown db connect")
-		_ = global.Db.Close()
-	}
+	//if global.Db != nil {
+	//	global.Logger.Info("Shutdown db connect")
+	//	_ = global.Db.Close()
+	//}
 }

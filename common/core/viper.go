@@ -67,6 +67,7 @@ func Viper(path ...string) *viper.Viper {
 func addDefault(v *viper.Viper) {
 	v.SetDefault("zap.dir", "./logs")                    // 日志目录
 	v.SetDefault("zap.log-in-console", true)             // 是否打印日志到控制台
+	v.SetDefault("system.listen", "0.0.0.0")             // 监听地址
 	v.SetDefault("system.port", "8080")                  // 启动端口
 	v.SetDefault("system.db-type", "mysql")              // 默认数据库类型
 	v.SetDefault("jwt.signing-key", "default-jwt-token") // 默认的jwt加密密钥
