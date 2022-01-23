@@ -10,6 +10,6 @@ type CustomClaims struct {
 }
 
 type BaseClaims struct {
-	ID       int
+	ID       uint
 	Username string
 }

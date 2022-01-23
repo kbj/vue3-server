@@ -14,7 +14,7 @@ func AuthLogin() fiber.Handler {
 		token := c.Get(fiber.HeaderAuthorization)
 
 		// token是否存在的校验
-		if token == "" || strings.Contains(token, "Bearer") {
+		if token == "" || !strings.Contains(token, "Bearer") {
 			// token不存在，返回403无权限
 			notAuth := utils.ResponseNotAuth()
 			c.Status(notAuth.Code)

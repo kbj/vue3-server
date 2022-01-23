@@ -38,7 +38,10 @@ func CreateClaims(claims base.BaseClaims) base.CustomClaims {
 // ParseJwtToken 解析Token
 func ParseJwtToken(tokenString string) (*base.CustomClaims, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &base.CustomClaims{}, func(token *jwt.Token) (i interface{}, e error) {
-		return global.Config.Jwt.SigningKey, nil
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, TokenInvalid
+		}
+		return []byte(global.Config.Jwt.SigningKey), nil
 	})
 	if err != nil {
 		if ve, ok := err.(*jwt.ValidationError); ok {

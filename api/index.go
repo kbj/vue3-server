@@ -27,11 +27,11 @@ func registerAnonymousRoutes(app *fiber.App) {
 // 注册需要登录验证的路由
 func registerAuthRoutes(app *fiber.App) {
 	v1Group := app.Group("")
-	v1Group.Use(middleware.AuthLogin())
+	v1Group.Use(middleware.AuthLogin()).Use(cors.New())
 	global.Logger.Info("添加中间件：AuthLogin")
 
 	// 用户相关
-	userGroup := v1Group.Group("user")
+	userGroup := v1Group.Group("users")
 	v1.InitUserRoute(&userGroup)
 
 	global.Logger.Info("初始化路由完成！")

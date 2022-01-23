@@ -12,6 +12,8 @@ import (
 func InitializeTables(db *gorm.DB) {
 	err := db.AutoMigrate(
 		system.User{},
+		system.Role{},
+		system.Department{},
 	)
 
 	if err != nil {
