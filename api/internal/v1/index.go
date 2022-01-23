@@ -4,4 +4,5 @@ import "vue3-server/service"
 
 var (
 	userService = service.ServiceApp.System.UserService
+	menuService = service.ServiceApp.System.MenuService
 )

@@ -34,6 +34,9 @@ func registerAuthRoutes(app *fiber.App) {
 	userGroup := v1Group.Group("users")
 	v1.InitUserRoute(&userGroup)
 
+	// 角色相关
+	roleGroup := v1Group.Group("role")
+	v1.InitRoleRoute(&roleGroup)
 	global.Logger.Info("初始化路由完成！")
 }
 

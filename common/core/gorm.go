@@ -41,6 +41,7 @@ func getGormConfig() *gorm.Config {
 		TablePrefix:   "t_", // 表名前缀
 		SingularTable: true, // 使用单数表名
 	}
+	config.PrepareStmt = true // 执行任何 SQL 时都创建并缓存预编译语句
 
 	// 设置日志
 	log := zapgorm2.New(global.Logger)

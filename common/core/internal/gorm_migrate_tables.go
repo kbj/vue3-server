@@ -14,6 +14,8 @@ func InitializeTables(db *gorm.DB) {
 		system.User{},
 		system.Role{},
 		system.Department{},
+		system.Menu{},
+		system.RoleMenu{},
 	)
 
 	if err != nil {
