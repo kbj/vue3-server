@@ -1,7 +1,6 @@
 package system
 
 import (
-	"github.com/gofiber/fiber/v2"
 	"vue3-server/common/global"
 	"vue3-server/entity/system"
 	"vue3-server/model/base"
@@ -12,7 +11,7 @@ import (
 type MenuService struct{}
 
 // RoleMenus 根据角色ID查询该角色拥有的菜单
-func (*MenuService) RoleMenus(ctx *fiber.Ctx, roleId uint) *base.ResponseEntity {
+func (*MenuService) RoleMenus(roleId uint) *base.ResponseEntity {
 	// 查询角色拥有的菜单
 	var params []uint
 	global.Db.Raw(`
@@ -36,7 +35,7 @@ func (*MenuService) RoleMenus(ctx *fiber.Ctx, roleId uint) *base.ResponseEntity 
 	// 递归组合成前端需要的格式
 	var respMenu response.SysMenuRecursive
 	respMenu = *recursiveMenus(&respMenu, &menus)
-	return utils.ResponseSuccess(&respMenu.Children)
+	return utils.ResponseSuccess(respMenu.Children)
 }
 
 // 递归查询出树的数组
