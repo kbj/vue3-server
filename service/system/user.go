@@ -7,6 +7,7 @@ import (
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 	"reflect"
+	"time"
 	"vue3-server/common/global"
 	"vue3-server/entity/system"
 	"vue3-server/model/base"
@@ -74,34 +75,38 @@ func (userService *UserService) GetUserInfo(ctx *fiber.Ctx, id uint) *base.Respo
 // GetUserList 用户列表
 func (userService UserService) GetUserList(ctx *fiber.Ctx, param *request.SysUserListModel) *base.ResponseEntity {
 	db := global.Db.Model(&system.User{}).Offset(param.Offset).Limit(param.Size)
-	if param.Name != nil {
+	if param.Name != nil && *param.Name != "" {
 		db = db.Where("name like ?", fmt.Sprintf("%%%s%%", *param.Name))
 	}
-	if param.Realname != nil {
+	if param.Realname != nil && *param.Realname != "" {
 		db = db.Where("realname like ?", fmt.Sprintf("%%%s%%", *param.Realname))
 	}
 	if param.Id != "" {
 		db = db.Where("id = ?", param.Id)
 	}
-	if param.Cellphone != nil {
+	if param.Cellphone != nil && *param.Cellphone != "" {
 		db = db.Where("cellphone = ?", *param.Cellphone)
 	}
 	if param.Enable != nil {
 		switch param.Enable.(type) {
-		case int:
+		case float64:
 			db = db.Where("enable = ?", param.Enable)
 		}
 	}
 	if param.CreateAt != nil {
 		switch reflect.TypeOf(param.CreateAt).Kind() {
 		case reflect.Array, reflect.Slice:
-			// 数组
+			// 时间数组
 			values := reflect.ValueOf(param.CreateAt)
-			fmt.Println(values)
+			startString := values.Index(0).Interface().(string)
+			endString := values.Index(1).Interface().(string)
+			start, _ := time.Parse("2006-01-02T15:04:05.000Z", startString)
+			end, _ := time.Parse("2006-01-02T15:04:05.000Z", endString)
+			db.Where("create_at between ? and ?", start, end)
 		}
 	}
 
-	var lists []system.User
+	var lists []response.SysUserListModel
 	var total int64
 	db.Count(&total)
 	db.Find(&lists)
