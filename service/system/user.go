@@ -2,9 +2,11 @@ package system
 
 import (
 	"errors"
+	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
+	"reflect"
 	"vue3-server/common/global"
 	"vue3-server/entity/system"
 	"vue3-server/model/base"
@@ -67,4 +69,45 @@ func (userService *UserService) GetUserInfo(ctx *fiber.Ctx, id uint) *base.Respo
 		Department: user.Department,
 	}
 	return utils.ResponseSuccess(&resp)
+}
+
+// GetUserList 用户列表
+func (userService UserService) GetUserList(ctx *fiber.Ctx, param *request.SysUserListModel) *base.ResponseEntity {
+	db := global.Db.Model(&system.User{}).Offset(param.Offset).Limit(param.Size)
+	if param.Name != nil {
+		db = db.Where("name like ?", fmt.Sprintf("%%%s%%", *param.Name))
+	}
+	if param.Realname != nil {
+		db = db.Where("realname like ?", fmt.Sprintf("%%%s%%", *param.Realname))
+	}
+	if param.Id != "" {
+		db = db.Where("id = ?", param.Id)
+	}
+	if param.Cellphone != nil {
+		db = db.Where("cellphone = ?", *param.Cellphone)
+	}
+	if param.Enable != nil {
+		switch param.Enable.(type) {
+		case int:
+			db = db.Where("enable = ?", param.Enable)
+		}
+	}
+	if param.CreateAt != nil {
+		switch reflect.TypeOf(param.CreateAt).Kind() {
+		case reflect.Array, reflect.Slice:
+			// 数组
+			values := reflect.ValueOf(param.CreateAt)
+			fmt.Println(values)
+		}
+	}
+
+	var lists []system.User
+	var total int64
+	db.Count(&total)
+	db.Find(&lists)
+
+	var result = make(map[string]interface{})
+	result["list"] = lists
+	result["totalCount"] = total
+	return utils.ResponseSuccess(&result)
 }
