@@ -42,6 +42,10 @@ func registerAuthRoutes(app *fiber.App) {
 	departmentGroup := v1Group.Group("department")
 	v1.InitDepartmentRoute(&departmentGroup)
 
+	// 菜单相关
+	menuGroup := v1Group.Group("menu")
+	v1.InitMenuRoute(&menuGroup)
+
 	global.Logger.Info("初始化路由完成！")
 }
 

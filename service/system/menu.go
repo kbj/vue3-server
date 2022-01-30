@@ -72,3 +72,21 @@ func recursiveMenus(menuPoint *response.SysMenuRecursive, dbMenus *[]system.Menu
 	}
 	return &menuEntity
 }
+
+// GetMenuList 菜单列表
+func (*MenuService) GetMenuList(offset int, size int) *base.ResponseEntity {
+	// 查询拥有的菜单信息
+	var menus []system.Menu
+	var total int
+	global.Db.Find(&menus)
+	total = len(menus)
+
+	// 递归组合成前端需要的格式
+	var respMenu response.SysMenuRecursive
+	respMenu = *recursiveMenus(&respMenu, &menus)
+
+	var result = make(map[string]interface{})
+	result["list"] = respMenu.Children
+	result["totalCount"] = total
+	return utils.ResponseSuccess(&result)
+}
