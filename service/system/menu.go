@@ -90,3 +90,9 @@ func (*MenuService) GetMenuList(offset int, size int) *base.ResponseEntity {
 	result["totalCount"] = total
 	return utils.ResponseSuccess(&result)
 }
+
+// DeleteMenu 删除菜单
+func (*MenuService) DeleteMenu(id int) *base.ResponseEntity {
+	global.Db.Delete(&system.Menu{}, id)
+	return utils.ResponseSuccess("删除成功！")
+}
