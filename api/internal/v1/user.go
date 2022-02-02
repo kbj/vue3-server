@@ -14,6 +14,7 @@ func InitUserRoute(route *fiber.Router) {
 	router := *route
 	router.Get("/:id", getUser)
 	router.Post("/list", userList)
+	router.Patch("/:id", updateUserInfo)
 }
 
 // getUser 查询某个用户信息
@@ -40,4 +41,20 @@ func userList(context *fiber.Ctx) error {
 	}
 
 	return context.JSON(userService.GetUserList(context, &param))
+}
+
+// 更新用户信息
+func updateUserInfo(context *fiber.Ctx) error {
+	id, err := strconv.Atoi(context.Params("id"))
+	if err != nil {
+		return context.JSON(utils.ResponseFail("请输入正常的ID！"))
+	}
+	var param request.SysUser
+	err = context.BodyParser(&param)
+	if err != nil {
+		return context.JSON(utils.ResponseFail("解析参数失败！"))
+	}
+	param.Id = uint(id)
+
+	return context.JSON(userService.UpdateUserInfo(context, &param))
 }

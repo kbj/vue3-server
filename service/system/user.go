@@ -116,3 +116,17 @@ func (userService UserService) GetUserList(ctx *fiber.Ctx, param *request.SysUse
 	result["totalCount"] = total
 	return utils.ResponseSuccess(&result)
 }
+
+// UpdateUserInfo 更新用户信息
+func (*UserService) UpdateUserInfo(ctx *fiber.Ctx, param *request.SysUser) *base.ResponseEntity {
+	var user system.User
+	global.Db.First(&user, param.Id)
+	global.Db.Model(&user).Updates(system.User{
+		Cellphone:    param.Cellphone,
+		DepartmentId: param.DepartmentId,
+		Name:         param.Name,
+		Realname:     param.Realname,
+		RoleId:       param.RoleId,
+	})
+	return utils.ResponseSuccess("更新成功！")
+}

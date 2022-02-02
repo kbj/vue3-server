@@ -15,3 +15,12 @@ type SysUserListModel struct {
 	Enable    interface{} `json:"enable"`
 	CreateAt  interface{} `json:"createAt"`
 }
+
+type SysUser struct {
+	Id           uint   `json:"id"`
+	Cellphone    string `json:"cellphone"`
+	DepartmentId uint   `json:"departmentId"`
+	Name         string `json:"name"`
+	Realname     string `json:"realname"`
+	RoleId       uint   `json:"roleId"`
+}
