@@ -24,3 +24,8 @@ type SysUser struct {
 	Realname     string `json:"realname"`
 	RoleId       uint   `json:"roleId"`
 }
+
+type SysCreateUser struct {
+	SysUser
+	Password string `json:"password"`
+}

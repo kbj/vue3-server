@@ -9,6 +9,7 @@ import (
 	"reflect"
 	"time"
 	"vue3-server/common/global"
+	base2 "vue3-server/entity/base"
 	"vue3-server/entity/system"
 	"vue3-server/model/base"
 	"vue3-server/model/system/request"
@@ -129,4 +130,30 @@ func (*UserService) UpdateUserInfo(ctx *fiber.Ctx, param *request.SysUser) *base
 		RoleId:       param.RoleId,
 	})
 	return utils.ResponseSuccess("更新成功！")
+}
+
+// DeleteUser 删除用户
+func (*UserService) DeleteUser(id uint) *base.ResponseEntity {
+	global.Db.Delete(&system.User{}, id)
+	return utils.ResponseSuccess("删除成功！")
+}
+
+// CreateUser 创建用户
+func (*UserService) CreateUser(param *request.SysCreateUser) *base.ResponseEntity {
+	user := system.User{
+		Model: base2.Model{
+			CreateAt: time.Now(),
+			UpdateAt: time.Now(),
+		},
+		Name:         param.Name,
+		Realname:     param.Realname,
+		Password:     utils.Md5Encode(param.Password),
+		Cellphone:    param.Cellphone,
+		RoleId:       param.RoleId,
+		DepartmentId: param.DepartmentId,
+		Enable:       1,
+	}
+	global.Db.Create(&user)
+
+	return utils.ResponseSuccess("创建成功！")
 }

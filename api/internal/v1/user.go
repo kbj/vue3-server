@@ -15,6 +15,8 @@ func InitUserRoute(route *fiber.Router) {
 	router.Get("/:id", getUser)
 	router.Post("/list", userList)
 	router.Patch("/:id", updateUserInfo)
+	router.Delete("/:id", deleteUser)
+	router.Post("", createUsers)
 }
 
 // getUser 查询某个用户信息
@@ -57,4 +59,25 @@ func updateUserInfo(context *fiber.Ctx) error {
 	param.Id = uint(id)
 
 	return context.JSON(userService.UpdateUserInfo(context, &param))
+}
+
+// 删除用户信息
+func deleteUser(context *fiber.Ctx) error {
+	id, err := strconv.Atoi(context.Params("id"))
+	if err != nil {
+		return context.JSON(utils.ResponseFail("请输入正常的ID！"))
+	}
+	if id < 10 {
+		return context.JSON(utils.ResponseFail("ID小于10不允许删除！"))
+	}
+	return context.JSON(userService.DeleteUser(uint(id)))
+}
+
+// 创建用户
+func createUsers(context *fiber.Ctx) error {
+	var param request.SysCreateUser
+	if err := context.BodyParser(&param); err != nil {
+		return context.JSON(utils.ResponseFail("解析参数失败！"))
+	}
+	return context.JSON(userService.CreateUser(&param))
 }
