@@ -7,3 +7,10 @@ type SysRoleListModel struct {
 	Intro    string      `json:"intro"`
 	CreateAt interface{} `json:"createAt"`
 }
+
+type SysRoleMenuModel struct {
+	Id       uint    `json:"id"`
+	Name     string  `json:"name"`
+	Intro    string  `json:"intro"`
+	MenuList *[]uint `json:"menuList"`
+}
